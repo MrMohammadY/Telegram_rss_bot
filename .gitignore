@@ -2,3 +2,4 @@ venv
 .idea/
 config.ini
 my_bot.session
+my_bot.session-journal
