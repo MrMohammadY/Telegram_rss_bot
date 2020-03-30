@@ -1,2 +1,4 @@
 venv
 .idea/
+config.ini
+my_bot.session
