@@ -73,12 +73,12 @@ def send_news():
                     if i['img_links']:
                         img_file = wget.download(i['img_links'])
                         time.sleep(2)
-                        app.send_photo(chanel_id, photo=img_file, caption='✉ {0} \n\n 🔎{1} \n\n ✅@khazar_online'.format(i['title'], i['summary']))
+                        app.send_photo(chanel_id, photo=img_file, caption='✉ {0} \n\n 🔎{1} \n\n '.format(i['title'], i['summary']))
                         print('Send message')
                         os.remove(img_file)
                     else:
                         time.sleep(2)
-                        app.send_message(chanel_id, '✉ {0} \n\n 🔎{1} \n\n ✅@khazar_online'.format(i['title'], i['summary']))
+                        app.send_message(chanel_id, '✉ {0} \n\n 🔎{1} \n\n '.format(i['title'], i['summary']))
                 deleted_past_news()
                 count_end = count_find
         except TimeoutError as Ter:
