@@ -10,8 +10,6 @@ client = MongoClient('localhost', 27017)
 db = client.rss_bot
 collection = db.rss_news
 # ---------------------------------------- >> Connect to rss site
-feed = feedparser.parse("https://www.khabaronline.ir/rss/tp/1")
-
 app = Client('my_bot')
 
 chanel_id = -1001476077997
@@ -20,6 +18,7 @@ chanel_id = -1001476077997
 def get_rss_news():
     # ---------------------------------------- >> Get information of rss site
     try:
+        feed = feedparser.parse("https://www.khabaronline.ir/rss/tp/1")
         feed_entries = feed.entries
         for entry in feed_entries:
             title = entry.title
@@ -53,10 +52,10 @@ def deleted_past_news():
     all_news = collection.find()
     for i in all_news:
         if dd in i['published']:
-            print('This news is new')
+            print('This news for today : ', i['title'])
         else:
             collection.delete_one(i)
-            print('Message is deleted')
+            print('Message is deleted : ', i['title'])
 
 
 count_end = 0
@@ -65,24 +64,19 @@ count_end = 0
 def send_news():
     with app:
         global count_end
-        count_find = collection.find().count()
-        all_news = collection.find().sort('published')
-        try:
-            if count_find > count_end:
-                for i in all_news:
-                    if i['img_links']:
-                        img_file = wget.download(i['img_links'])
-                        time.sleep(2)
-                        app.send_photo(chanel_id, photo=img_file, caption='✉ {0} \n\n 🔎{1} \n\n '.format(i['title'], i['summary']))
-                        print('Send message')
-                        os.remove(img_file)
-                    else:
-                        time.sleep(2)
-                        app.send_message(chanel_id, '✉ {0} \n\n 🔎{1} \n\n '.format(i['title'], i['summary']))
-                deleted_past_news()
-                count_end = count_find
-        except TimeoutError as Ter:
-            print('message Error : ', Ter)
+        all_news = list(collection.find().sort('published'))
+        count_all = len(all_news)
+        for i in all_news[count_end:count_all]:
+            if i['img_links']:
+                img_file = wget.download(i['img_links'])
+                app.send_photo(chanel_id, photo=img_file, caption='✉ {0} \n\n 🔎{1} \n\n '.format(i['title'], i['summary']))
+                os.remove(img_file)
+                print('This message :', i['title'], 'is SEND...')
+            else:
+                app.send_message(chanel_id, '✉ {0} \n\n 🔎{1} \n\n '.format(i['title'], i['summary']))
+        deleted_past_news()
+        count_end = count_all
+        print(count_end)
 
 
 while True:
