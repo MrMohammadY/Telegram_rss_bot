@@ -53,7 +53,7 @@ def get_rss_news():
                 dd = datetime.date.today()
                 dd = dd.strftime('%d %b %Y')
                 if dd in published:
-                    if collection.find(dict(title=post.get('title'))).count() != 0 or collection.find(dict(title=post.get('summary'))).count() != 0:
+                    if collection.find({'title': post.get('title')}).count() != 0 or collection.find({'title': post.get('summary')}).count() != 0:
                         print('This value exists')
                     else:
                         print('This value does not exist')
