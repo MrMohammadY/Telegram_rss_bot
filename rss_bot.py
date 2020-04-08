@@ -52,8 +52,12 @@ def get_rss_news():
                 # ---------------------------------------- >> Check information and insert to Mongodb
                 dd = datetime.date.today()
                 dd = dd.strftime('%d %b %Y')
+                count_repetitious_news = 0
                 if dd in published:
-                    if collection.find({'title': post.get('title')}).count() != 0 or collection.find({'title': post.get('summary')}).count() != 0:
+                    for g in collection.find():
+                        if str(post.get('title') in str(g.get('title') or str(post.get(summary)) in str(g.get('summary')))):
+                            count_repetitious_news += 1
+                    if count_repetitious_news != 0:
                         print('This value exists')
                     else:
                         print('This value does not exist')
