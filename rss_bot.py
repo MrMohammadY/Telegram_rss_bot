@@ -17,7 +17,7 @@ app = Client('my_bot')
 chanel_id = -1001476077997
 
 # ---------------------------------------- >> Get url site of File.txt
-with open('C:/Users/Mohammad/Desktop/site.txt', 'r') as site:
+with open('C:/Users/Mohammad/Desktop/Python_Project/telegram_rss_bot/site.txt', 'r') as site:
     site = site.read()
     site = site.split('\n')
 l_site = len(site)
@@ -55,11 +55,12 @@ def get_rss_news():
                 count_repetitious_news = 0
                 if dd in published:
                     for g in collection.find():
-                        if str(post.get('title') in str(g.get('title') or str(post.get(summary)) in str(g.get('summary')))):
+                        if str(g.get('title')) in str(post.get('title')) or str(g.get('summary')) in str(post.get('summary')):
                             count_repetitious_news += 1
-                    if count_repetitious_news != 0:
+                    print(count_repetitious_news)
+                    if count_repetitious_news > 0:
                         print('This value exists')
-                    else:
+                    elif count_repetitious_news == 0:
                         print('This value does not exist')
                         posts = collection.insert_one(post).inserted_id
                 else:
